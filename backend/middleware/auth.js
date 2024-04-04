@@ -9,6 +9,7 @@ module.exports = (req, res, next) => {
             userId: userId
         };
     } catch(error) {
-        res.status(401).json({ message: 'erreur dauthentifi' });
+        res.status(401).json({ error });
     }
+    next();
 };
