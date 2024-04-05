@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', bookCtrl.allBook);
 router.post('/', auth, multer, bookCtrl.createBook);
 router.get('/:id', bookCtrl.findBook);
-router.put('/:id', auth, bookCtrl.modifyBook);
+router.put('/:id', auth, multer, bookCtrl.modifyBook);
 router.delete('/:id', auth, bookCtrl.deleteBook);
 
- module.exports = router;
+module.exports = router;
