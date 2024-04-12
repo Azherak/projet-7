@@ -17,7 +17,7 @@ exports.findBook = (req, res, next) => {
 
 exports.bestRating = (req, res, next) => {
   Book.find()
-    .sort({ rating: -1 })
+    .sort({ averageRating: -1 })
     .limit(3)
     .then(books => res.status(200).json(books))
     .catch(error => res.status(400).json({ error }));
@@ -78,20 +78,22 @@ exports.deleteBook = (req, res, next) => {
 
 exports.setRating = (req, res, next) => {
   const newRating = req.body.rating; 
-  console.log(newRating);
+  const userId = req.body.userId;
   Book.findOne({ _id: req.params.id })
     .then((book) => {
-      if (book.userId != req.auth.userId) {
-        res.status(400).json({message: 'non autorisé'});
+      // Trouvez la note de l'utilisateur, si elle existe
+      const userRating = book.ratings.find(rating => rating.userId === userId);
+      if (userRating) {
+        // Si l'utilisateur a déjà noté le livre, mettez à jour sa note
+        userRating.grade = newRating;
       } else {
-        book.rating = newRating;
-        book.ratings.push(newRating);
-        const sum = book.ratings.reduce((a, b) => a + b, 0);
-        book.averageRating = sum / book.ratings.length;
-
-        book.save()
-          .then(() => res.status(200).json({ message: 'Note du livre mise à jour !', book: book }))
-          .catch(error => res.status(401).json({ error }));
-      }    
+        // Sinon, ajoutez une nouvelle note
+        book.ratings.push({ userId, grade: newRating });
+      }
+      const sum = book.ratings.reduce((a, b) => a + b.grade, 0);
+      book.averageRating = sum / book.ratings.length; // Mettez à jour averageRating ici
+      book.save()
+        .then(() => res.status(200).json({ message: 'Note du livre mise à jour !', book: book }))
+        .catch(error => res.status(401).json({ error }));
     });
 };
