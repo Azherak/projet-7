@@ -10,7 +10,7 @@ router.get('/:id', bookCtrl.findBook); /* single book */
 router.get('/bestrating', bookCtrl.bestRating); /* array of book */
 router.post('/', auth, multer, bookCtrl.createBook);
 router.put('/:id', auth, multer, bookCtrl.modifyBook); /* met ajour le livre */
-router.delete('/:id', auth, bookCtrl.deleteBook); /* supprime le livre */
-router.post('/:id/rating', auth, bookCtrl.setRating);
+router.delete('/:id', auth, multer, bookCtrl.deleteBook); /* supprime le livre */
+router.post('/:id/rating', auth, multer, bookCtrl.setRating);
 
 module.exports = router;

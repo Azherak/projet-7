@@ -78,7 +78,7 @@ exports.deleteBook = (req, res, next) => {
 
 exports.setRating = (req, res, next) => {
   const newRating = req.body.rating; 
-
+  console.log(newRating);
   Book.findOne({ _id: req.params.id })
     .then((book) => {
       if (book.userId != req.auth.userId) {
