@@ -88,7 +88,7 @@ exports.setRating = (req, res, next) => {
         book.ratings.push({ userId, grade: newRating });
       }
       const sum = book.ratings.reduce((a, b) => a + b.grade, 0);
-      book.averageRating = Math.ceil(sum / book.ratings.length); // Utilisation de Math.ceil() pour arrondir à l'entier supérieur
+      book.averageRating = Math.round((sum / book.ratings.length) * 10) / 10; // Arrondi à une décimale
       book.save()
         .then(() => {
           book.id = book._id.toString();
