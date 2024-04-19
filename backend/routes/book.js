@@ -11,19 +11,6 @@ router.get('/:id', bookCtrl.findBook); /* single book */
 router.post('/', auth, multer, bookCtrl.createBook);
 router.put('/:id', auth, multer, bookCtrl.modifyBook); /* met ajour le livre */
 router.delete('/:id', auth, multer, bookCtrl.deleteBook); /* supprime le livre */
-router.post('/:id/rating', auth, bookCtrl.setRating);
+router.post('/:id/rating', auth, multer, bookCtrl.setRating);
 
 module.exports = router;
-/*
-export async function getBestRatedBooks() {
-    try {
-      const response = await axios({
-        method: 'GET',
-        url: `${API_ROUTES.BEST_RATED}`,
-      });
-      return formatBooks(response.data);
-    } catch (e) {
-      console.error(e);
-      return [];
-    }
-  }*/

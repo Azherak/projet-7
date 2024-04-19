@@ -81,19 +81,19 @@ exports.setRating = (req, res, next) => {
   const userId = req.body.userId;
   Book.findOne({ _id: req.params.id })
     .then((book) => {
-      // Trouvez la note de l'utilisateur, si elle existe
       const userRating = book.ratings.find(rating => rating.userId === userId);
       if (userRating) {
-        // Si l'utilisateur a déjà noté le livre, mettez à jour sa note
         userRating.grade = newRating;
       } else {
-        // Sinon, ajoutez une nouvelle note
         book.ratings.push({ userId, grade: newRating });
       }
       const sum = book.ratings.reduce((a, b) => a + b.grade, 0);
-      book.averageRating = sum / book.ratings.length; // Mettez à jour averageRating ici
+      book.averageRating = Math.ceil(sum / book.ratings.length); // Utilisation de Math.ceil() pour arrondir à l'entier supérieur
       book.save()
-        .then(() => res.status(200).json({ message: 'Note du livre mise à jour !', book: book }))
+        .then(() => {
+          book.id = book._id.toString();
+          res.status(200).json(book);
+        })
         .catch(error => res.status(401).json({ error }));
     });
 };
